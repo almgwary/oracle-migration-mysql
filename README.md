@@ -147,7 +147,7 @@ BEGIN
                 FROM MIGRATION_TABELS_LIST 
                ORDER BY TABLE_NAME)
   LOOP
-    OPEN cur FOR 'SELECT * FROM '||rec.TABLE_NAME||' ORDER BY 1';
+     OPEN cur FOR 'SELECT * FROM '||rec.TABLE_NAME||' ORDER BY 1';
     DBMS_OUTPUT.put_line('Working on table:' ||rec.TABLE_NAME);
     
     
@@ -198,15 +198,15 @@ BEGIN
         ELSIF (desctab (indx).col_type = 12)
         THEN
           DBMS_SQL.COLUMN_VALUE (curid, indx, datevar);
-          out_values := out_values||
-            'to_date('''||to_char(datevar,'DD.MM.YYYY HH24:MI:SS')||
-             ''',''DD.MM.YYYY HH24:MI:SS''),';
+          out_values := out_values|| ''''||
+            to_char(datevar,'YYYY-MM-DD HH24:MI:SS')||
+             ''',';
         END IF;
       END LOOP; 
      DBMS_OUTPUT.put_line(out_columns||rtrim(out_values,',')||');');
      -- create new file for each 2M record
     -- write to file with name 
-    if mod ( total_row_fetched, 2 ) = 0 then
+    if mod ( total_row_fetched, 2000 ) = 0 then
       /* close old file, open new */
       -- if file open close it
       if SYS.UTL_FILE.IS_OPEN(fHandle)then
@@ -241,6 +241,4 @@ END;
 /
  
  
-
-
 ```
